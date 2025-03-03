@@ -1,3 +1,5 @@
+import { Dayjs } from "dayjs";
+
 export type MembershipPeriodData = {
   id: number;
   uuid: string;
@@ -6,3 +8,5 @@ export type MembershipPeriodData = {
   end: Date;
   state: string;
 };
+
+export type CreateMembershipPeriodModel = Omit<MembershipPeriodData, 'uuid'>

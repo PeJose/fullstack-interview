@@ -1,8 +1,7 @@
 import dayjs from "dayjs";
 import type { Request, Response } from "express";
-import { v4 as uuidv4 } from "uuid";
 import type { TypedRequest } from "../../middleware/validator.middleware";
-import { DATE_FORMAT, MOCK_USER } from "../constants/common";
+import { DATE_FORMAT, MOCK_USER, PERIOD_TO_UNIT } from "../constants/common";
 import { Membership, MembershipPeriod } from "../models";
 import type {
   CreateMembershipDTO,
@@ -42,12 +41,7 @@ export function createMembership(
 ) {
   const validFrom = dayjs(new Date(req.body.validFrom ?? ""));
 
-  const unit =
-    req.body.billingInterval === "monthly"
-      ? "month"
-      : req.body.billingInterval === "yearly"
-        ? "year"
-        : "day";
+  const unit = PERIOD_TO_UNIT[req.body.billingInterval]
   const validUntil = validFrom.add(req.body.billingPeriods, unit);
 
   const state = dayjs().isBefore(validFrom)
@@ -57,8 +51,6 @@ export function createMembership(
       : "active";
 
   const newMembership = {
-    id: Membership.getLastId(),
-    uuid: uuidv4(),
     name: req.body.name,
     state,
     validFrom: validFrom.toDate(),
@@ -70,27 +62,26 @@ export function createMembership(
     billingPeriods: req.body.billingPeriods,
     billingInterval: req.body.billingInterval,
   };
-  Membership.create(newMembership);
+  const createdMembership = Membership.create(newMembership);
 
   let periodStart = validFrom;
   const membershipPeriods = [];
   for (let i = 0; i < req.body.billingPeriods; i++) {
     const validFrom = periodStart;
-    const validUntil = validFrom.add(1, unit);
+    const validUntil = validFrom.add(1, unit)
 
     const period = {
       id: i + 1,
-      uuid: uuidv4(),
-      membership: newMembership.id,
+      membership: createdMembership.id,
       start: validFrom.toDate(),
       end: validUntil.toDate(),
       state: "planned",
     };
-    MembershipPeriod.create(period);
-    membershipPeriods.push(period);
+    const createdPeriod = MembershipPeriod.create(period);
+    membershipPeriods.push(createdPeriod);
 
     periodStart = validUntil;
   }
 
-  res.status(201).json({ membership: newMembership, membershipPeriods });
+  res.status(201).json({ membership: createdMembership, membershipPeriods });
 }

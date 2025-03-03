@@ -9,7 +9,7 @@ export const CreateMembershipSchema = z
       .number({ message: "missingMandatoryFields" })
       .min(0, "negativeRecurringPrice"),
     paymentMethod: z.string().nullable(),
-    billingInterval: z.enum(["monthly", "yearly"], {
+    billingInterval: z.enum(["monthly", "yearly", "weekly"], {
       message: "invalidBillingPeriods",
     }),
     billingPeriods: z.number(),

@@ -8,9 +8,6 @@
     "resolveJsonModule": true,
     "strict": true,
     "allowJs": true,  // Allows TypeScript to process JavaScript files
-    "paths": {
-      "@src/": ["./src/*"]
-    }
   },
   "include": ["src/**/*"],
   "exclude": ["node_modules"],

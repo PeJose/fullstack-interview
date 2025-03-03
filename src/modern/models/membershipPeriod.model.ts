@@ -1,7 +1,8 @@
 import dayjs from "dayjs";
+import { v4 as uuid } from 'uuid'
 import membershipPeriods from "../../data/membership-periods.json";
 import { DATE_FORMAT } from "../constants/common";
-import type { MembershipPeriodData } from "../types/membershipPeriod.types";
+import type { CreateMembershipPeriodModel, MembershipPeriodData } from "../types/membershipPeriod.types";
 
 export const MembershipPeriod = {
   findByMembership(membership: number): Array<MembershipPeriodData> {
@@ -13,12 +14,16 @@ export const MembershipPeriod = {
         end: new Date(period.end),
       }));
   },
-  create(data: MembershipPeriodData): number {
-    membershipPeriods.push({
+  create(data: CreateMembershipPeriodModel): MembershipPeriodData {
+    const membershipPeriodDto = {
       ...data,
+      uuid: uuid(),
       start: dayjs(data.start).format(DATE_FORMAT),
       end: dayjs(data.end).format(DATE_FORMAT),
-    });
-    return data.id;
+    }
+    membershipPeriods.push(membershipPeriodDto);
+    return {
+      ...membershipPeriodDto, start: data.start, end: data.end
+    };
   },
 };

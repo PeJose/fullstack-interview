@@ -1,3 +1,4 @@
+import { Dayjs } from "dayjs";
 import type { ParseDateToString } from "./helper.types";
 import type { MembershipPeriodData } from "./membershipPeriod.types";
 
@@ -11,10 +12,12 @@ export type MembershipData = {
   validUntil: Date;
   state: string;
   paymentMethod: string | null;
-  billingInterval: string;
+  billingInterval: 'yearly' | 'monthly' | 'weekly' | string & {}
   billingPeriods: number;
   assignedBy: string;
 };
+
+export type CreateMembershipModel = Omit<MembershipData, 'uuid' | 'id' >
 
 export type GetAllMembershipsDTO = Array<{
   membership: ParseDateToString<MembershipData, "validFrom" | "validUntil">;
