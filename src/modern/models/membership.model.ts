@@ -1,7 +1,8 @@
-import dayjs from "dayjs";
+import dayjs from 'dayjs';
+import { v4 as uuid } from 'uuid'
 import memberships from "../../data/memberships.json";
 import { DATE_FORMAT, MOCK_USER } from "../constants/common";
-import type { MembershipData } from "../types/membership.types";
+import type { CreateMembershipModel, MembershipData } from "../types/membership.types";
 
 export const Membership = {
   find(): Array<MembershipData> {
@@ -14,13 +15,21 @@ export const Membership = {
   getLastId(): number {
     return memberships.length + 1;
   },
-  create(data: MembershipData): number {
-    memberships.push({
+  create(data: CreateMembershipModel): MembershipData {
+    const id = this.getLastId()
+    const membershipDto = {
       ...data,
+      id,
+      uuid: uuid(),
       assignedBy: MOCK_USER.role,
       validUntil: dayjs(data.validUntil).format(DATE_FORMAT),
       validFrom: dayjs(data.validFrom).format(DATE_FORMAT),
-    });
-    return data.id;
+    }
+    memberships.push(membershipDto);
+    return {
+      ...membershipDto,
+      validFrom: data.validFrom,
+      validUntil: data.validUntil
+    };
   },
 };

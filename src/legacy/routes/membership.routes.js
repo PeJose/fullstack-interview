@@ -1,9 +1,10 @@
 const express = require("express");
-const router = express.Router();
 const memberships = require("../../data/memberships.json");
 const membershipPeriods = require("../../data/membership-periods.json");
 const { v4: uuidv4 } = require("uuid");
 
+
+const router = express.Router();
 /**
  * create a new membership
  */
@@ -22,7 +23,7 @@ router.post("/", (req, res) => {
   }
 
   if (req.body.recurringPrice < 100 && req.body.paymentMethod === "cash") {
-    // Intentional wording misspel? (should be lesst than 100)
+    // Intentional wording misspell? (should be < instead of >)
     return res.status(400).json({ message: "cashPriceBelow100" });
   }
 
@@ -47,7 +48,7 @@ router.post("/", (req, res) => {
       return res.status(400).json({ message: "billingPeriodsLessThan3Years" });
     }
     // Intentional bug? ^ (wrong if targeted for else statement)
-  } else {
+  } else if (req.body.billingInterval !== 'weekly') {
     return res.status(400).json({ message: "invalidBillingPeriods" });
   }
   // Intentional bug? ^ (no chance for weekly to pass)
