@@ -1,15 +1,14 @@
-import express, { Request, Response } from "express"
-import memberships from "../../data/memberships.json"
-import membershipPeriods from "../../data/membership-periods.json"
+import express from "express";
+import {
+  getAllMemberships,
+  createMembership,
+} from "../handlers/membership.handler";
+import { validator } from "../../middleware";
+import { CreateMembershipSchema } from "../validations/membership.validations";
 
 const router = express.Router();
 
-router.get("/", (req: Request, res: Response) => {
-  throw new Error('not implemented')
-})
-
-router.post("/", (req: Request, res: Response) => {
-  throw new Error('not implemented')
-})
+router.get("/", getAllMemberships);
+router.post("/", validator(CreateMembershipSchema), createMembership);
 
 export default router;
