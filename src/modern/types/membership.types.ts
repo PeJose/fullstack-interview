@@ -1,4 +1,3 @@
-import { Dayjs } from "dayjs";
 import type { ParseDateToString } from "./helper.types";
 import type { MembershipPeriodData } from "./membershipPeriod.types";
 

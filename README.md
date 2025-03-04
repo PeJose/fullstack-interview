@@ -118,3 +118,18 @@ We believe that great developers are not bound to a specific technology set, but
 - Jest - https://jestjs.io/
 
 Best of luck and looking forward to what you are able to accomplish! 🙂
+
+### My solution
+
+I divided the project into models, handlers and routes. I've used ```pnpm``` package manager, because that is tool that I use daily. I used additional packages:
+- Biome.js - linting and formatting
+- Zod - validation
+- helmet - response headers
+- nodemon - dev server
+- morgan - route logger
+- dayjs - precise date manipulations
+
+I've added 3 scripts to package.json:
+- ```dev``` - starts dev auto reloading server
+- ```lint``` - checks for linter errors
+- ```format``` - formats all code
